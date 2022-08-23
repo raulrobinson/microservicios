@@ -347,7 +347,7 @@ Para la documentación de estas APIs, es recomendable utilizar librerías ya exi
 A día de hoy, una de las mayores librerías o herramientas que da este soporte es Swagger. Con Swagger es posible documentar una API de forma sencilla sin la necesidad de mucha configuración o escritura.
 Para utilizar Swagger, tan solo es necesario incluir la dependencia principal a esta librería Maven en el POM principal del proyecto: 
 
-```
+```xml
 <dependency> 
     <groupId>io.springfox</groupId> 
     <artifactId>springfox-swagger2</artifactId> 
@@ -366,7 +366,7 @@ Por otro lado, tenemos una interfaz gráfica ofrecida por Swagger para documenta
 <img src="https://i.imgur.com/BaASx07.png">
 Para el uso de esta herramienta, será necesario incluir la dependencia correspondiente en el POM: 
 
-```
+```xml
 <dependency> 
     <groupId>io.springfox</groupId> 
     <artifactId>springfox-swagger-ui</artifactId> 
@@ -405,13 +405,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 }
 ```
-
 Está pensado para ser utilizado a nivel de controlador de nuestro servicio rest, ya que hace uso de los objetos de tipo ResponseEntity.
 *AVISO : Si no se especifica una excepción para ser controlada en la anotación
 “@ExceptionHandler(value= {...AQUÍ...})” se producirá un error indicando que no se ha encontrado manejador definido para esa excepción.*
 Por último, se suele utilizar una combinación de dos métodos que consiste en la creación de excepciones propias las cuales no será necesario que lancen a través de la anotación “@ResponseStatus(value = HttpStatus.ERROR_TYPE)” un error de tipo HTTP como respuesta, ya que de eso se encargará el manejador global. Dicho manejardor controlará estas excepciones como un error REST y dará una respuesta a través de los ResponseEntity que le indiquemos (con archivos HTML estáticos por ejemplo).
 Por lo tanto, debemos crear una clase controladora y utilizar la anotación @RestControllerAdvice par definir un manejador de excepciones global que controle estas excepciones.
------
+
+---
 
 ### Modelo
 Se sigue el patrón usual para los modelos de las aplicaciones web. Se distinguen dos tipos de objetos
@@ -508,107 +508,120 @@ Las anotaciones le indican a Lombok qué métodos debe generar escaneando los at
 - **@AllArgsConstructor**: Genera un constructor con todos los atributos como argumentos
 - **@NoArgsConstructor**: Genera un constructor sin argumentos
 - **@Builder**: Permite utilizar el patrón “builder” para crear nuevos objetos, como por ejemplo:
+
 ```java
 ControlVO.builder().alum_reference(controlDTO.getAlum_reference())
-.controlDate(controlDTO.getControlDate())
-.difficultComment(controlDTO.getDifficultComment())
-.difficultValuation(controlDTO.getDifficultValuation())
-.id(controlDTO.getId())
-.task_reference(controlDTO.getTask_reference())
-.workLoadComment(controlDTO.getWorkLoadComment())
-.workLoadValuation(controlDTO.getWorkLoadValuation())
-.build();
+        .controlDate(controlDTO.getControlDate())
+        .difficultComment(controlDTO.getDifficultComment())
+        .difficultValuation(controlDTO.getDifficultValuation())
+        .id(controlDTO.getId())
+        .task_reference(controlDTO.getTask_reference())
+        .workLoadComment(controlDTO.getWorkLoadComment())
+        .workLoadValuation(controlDTO.getWorkLoadValuation())
+        .build();
 ```
+
 Generalmente, los datos se intercambian con formato “JSON” o “XML” entre otros. Luego, estos datos son manejados por el controlador de la API y son traducidos al contexto del lenguaje orientado a objetos.
+
 ```yml
 {
-"alum_reference": "string",
-"controlDate": "2019- 06 - 10T18:19:51.802Z",
-"difficultComment": "string",
-"difficultValuation": 0,
-"id": 0,
-"task_reference": "string",
-"workDoneQuantityComment": "string",
-"workDoneQuantityValuation": 0,
-"workLoadComment": "string",
-"workLoadValuation": 0
+    "alum_reference": "string",
+    "controlDate": "2019- 06 - 10T18:19:51.802Z",
+    "difficultComment": "string",
+    "difficultValuation": 0,
+    "id": 0,
+    "task_reference": "string",
+    "workDoneQuantityComment": "string",
+    "workDoneQuantityValuation": 0,
+    "workLoadComment": "string",
+    "workLoadValuation": 0
 }
 ```
+
 Más tarde, interiormente, los servicios encargados manejar las peticiones llegadas al controlador del API, transforman y manejan esos objetos según las necesidades de la aplicación.
 Por ello, la traducción de los datos de DTO a VO se ha de realizar en la capa de Servicio de nuestra aplicación. Esta recibirá los DTOs del controlador y guardará los objetos VO a través de la capa de datos o repositorio.
 En nuestra aplicación, se ha seguido este patrón para la conversión y mapeo de datos entre objetos DTO y objetos VO o entidad. Uno de estos convertidores podemos verlo en el siguiente ejemplo:
+
 ```java
 @Component
 public class ControlConverter {
 public ControlDTO convertEntityToDTO(ControlVO controlVO) {
-return
-ControlDTO.builder().alum_reference(controlVO.getAlum_reference())
-.controlDate(controlVO.getControlDate()).difficultComment(controlVO.
-getDifficultComment())
-.difficultValuation(controlVO.getDifficultValuation()).id(controlVO.
-getId())
-.task_reference(controlVO.getTask_reference()).workLoadComment(contr
-olVO.getWorkLoadComment())
-.workLoadValuation(controlVO.getWorkLoadValuation()).build();
+    return ControlDTO.builder().alum_reference(controlVO.getAlum_reference())
+            .controlDate(controlVO.getControlDate()).difficultComment(controlVO.
+            getDifficultComment())
+            .difficultValuation(controlVO.getDifficultValuation()).id(controlVO.
+            getId())
+            .task_reference(controlVO.getTask_reference()).workLoadComment(contr
+            olVO.getWorkLoadComment())
+            .workLoadValuation(controlVO.getWorkLoadValuation()).build();
+    }
+
+    public ControlVO convertDTOToEntity(ControlDTO controlDTO) {
+        return ControlVO.builder().alum_reference(controlDTO.getAlum_reference())
+                .controlDate(controlDTO.getControlDate()).difficultComment(controlDT
+                O.getDifficultComment())
+                .difficultValuation(controlDTO.getDifficultValuation()).id(controlDT
+                O.getId())
+                .task_reference(controlDTO.getTask_reference()).workLoadComment(cont
+                rolDTO.getWorkLoadComment())
+                .workLoadValuation(controlDTO.getWorkLoadValuation()).build();
+    }
 }
-public ControlVO convertDTOToEntity(ControlDTO controlDTO) {
-return
-ControlVO.builder().alum_reference(controlDTO.getAlum_reference())
-.controlDate(controlDTO.getControlDate()).difficultComment(controlDT
-O.getDifficultComment())
-.difficultValuation(controlDTO.getDifficultValuation()).id(controlDT
-O.getId())
-.task_reference(controlDTO.getTask_reference()).workLoadComment(cont
-rolDTO.getWorkLoadComment())
-.workLoadValuation(controlDTO.getWorkLoadValuation()).build();
-}
- }
 ```
+
 ---
 ### Spring Data - MongoDB
 Como ya se ha comentado anteriormente, Spring Framework proporciona una potente interfaz para el manejo de datos con las principales tecnologías de base de datos. Estas interfaces se aúnan bajo el módulo de Spring-Data, el cual se subdivide en distintas librerías de las que el desarrollador dispone.
 Para MongoDB, Spring Data tiene dos formas de abordar esta estructura de datos. Una es utilizando su implementación a través de la interfaz MongoRepository. Y la otra es utilizando el java-bean MongoTemplate, el cual ofrece una implementación totalmente configurable por el desarrollador a través de código o XML.
 Para el uso de MongoRepository tan solo es necesario crear una interfaz que extienda de esta clase:
+
 ```java
 @Repository
-public interface TaskRepository extends MongoRepository<TaskVO,
-String>, CustomTaskRepository {
+public interface TaskRepository extends MongoRepository<TaskVO, String>, CustomTaskRepository {
 }
 ```
+
 Spring Data MongoRepository nos ofrece la posibilidad de definir métodos en la interfaz que hemos creado que extiende al repository, que Spring mapeará como queries de mongo.
 Por otro lado, MongoTemplate nos permite realizar un abordamiento más clásico para la creación de un repositorio. En este caso, tendremos la posibilidad utilizar un java-bean llamado MongoTemplate el cual nos es ofrecido por Spring Data y el cual es cargado en el contexto de Spring.
 Esta interfaz nos permite implementar los métodos que nos sean necesarios, creando queries propias y funciones complejas para el manejo de datos con mongo.
+
 ```java
 public interface CustomTaskRepository {
-List<TaskVO> findAllFilteredByQuery(final Query query);
+    List<TaskVO> findAllFilteredByQuery(final Query query);
 }
 ```
+
 ```java
-public class CustomTaskRepositoryImpl implements
-CustomTaskRepository {
-@Autowired
-private MongoTemplate mongoTemplate;
-@Override
-public List<TaskVO> findAllFilteredByQuery(final Query query) {
-return mongoTemplate.find(query, TaskVO.class);
-}
+public class CustomTaskRepositoryImpl implements CustomTaskRepository {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Override
+    public List<TaskVO> findAllFilteredByQuery(final Query query) {
+        return mongoTemplate.find(query, TaskVO.class);
+    }
 }
 ```
+
 En el caso de necesitar ambas implementaciones, es necesario crear una interfaz que extienda de MongoRepository y al mismo tiempo realizar una implementación propia de algunos métodos utilizando el java-bean MongoTemplate, como se puede ver en el ejemplo anterior.
 ---
+
 ### Spring Data - PostgreSQL
 Se crea una clase Interfaz que extienda a “JPARepository<R,T>” donde “R” es el tipo Java de la ID y “T” el tipo de los objetos que se van a guardar. La implementación de JPA hace uso de algunos ORMs como Hibernate.
 - **@Entity**: Señala que esta clase es un objeto que se puede persistir en la estructura de datos.
 - **@Id**: Señaliza que será la ID del objeto a persistir
 - **@GeneratedValue**: Genera automáticamente la id cuando un objeto se persiste
 Para las relaciones Uno a Muchos unidireccionales, la estructura básica de anotación es:
+
 ```java
 @OneToMany(cascade = CascadeType. ALL , orphanRemoval = true)
 @JoinColumn(name = "employee")
 private List<WorkExperienceVO> workExperiences;
 ```
+
 Donde “@OneToMany” señala qué tipo de relación es, el “cascadeType” hace referencia a la forma de comportarse la “cascada” de acciones de los datos. Es decir, si se borra un objeto de la lista de objetos referenciados también se borrará su persistencia y etc. En este caso, “ALL” hace referencia a que están todos los modos activados.
 El atributo “orphanRemoval” indica si se desea que cuando se borre un objeto padre persistido, también se borren todos sus hijos.
+
 ---
 ### Service Discovery
 El Service Discovery es un proyecto en sí mismo basado en Spring Boot y Spring Cloud. Lo que hace es resolver las peticiones a los servicios de una aplicación compuesta por microservicios. Esto quiere decir, que es el encargado de llamar a las direcciones (endpoints o uris) de cada servicio.
@@ -624,28 +637,33 @@ eureka.client.fetch-registry=false
 ```
 Esto nos permitirá acceder a una consola de información sobre el Service Discovery, con información sobre los servicios a los que hace referencia y a la máquina en la que está corriendo.
 De otra forma, también puede utilizarse la configuración en formato “.yml”, la cual es más limpia y más legible. Entre estas propiedades que se definen, se pueden configurar elementos del tipo:
+
 ```yml
 server:
-port: ${PORT:8761}
+    port: ${PORT:8761}
 ```
+
 Donde la notación con el dólar, indica el uso de una variable global ya definida. En este caso, con la notación **“DEFAULT:new”**, se está indicando que primeramente se buscará la variable definida por defecto “PORT” para la propiedad server. En caso de no existir, los dos puntos indicar un operador
 lógico “OR” que indica qué puerto ha de usarse en caso de no existir uno por defecto ya definido. Esto nos sirve para parametrizar la configuración de nuestra aplicación.
 ---
+
 ### Spring Cloud Gateway:
 El Gateway es un servicio basado en Spring Boot y Spring Cloud. Resumidamente, se encarga de resolver las peticiones realizadas a la aplicación de forma centralizada y distribuirla entra los servicios de una aplicación compuesta por microservicios.
 Esto quiere decir, que es el encargado de recibir y organizar las peticiones hacia los distintos recursos entre los distintos servicios.
 El Gateway, como su nombre indica, hace de “portero” en la conexión entre las peticiones externas y los microservicios que componen nuestra aplicación.
 Para la implementación del Gateway, como para otros servicios ya creados, primero se ha generado un proyecto inicializado desde la web spring-initializr. En este caso, es necesario añadir las dependencias referentes a la librería spring cloud y el artefacto gateway:
+
 ```xml
 <dependency>
-<groupId>org.springframework.cloud</groupId>
-<artifactId>spring-cloud-starter-gateway</artifactId>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
 </dependency>
 <dependency>
-<groupId>org.springframework.cloud</groupId>
-<artifactId>spring-cloud-starter-config</artifactId>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-config</artifactId>
 </dependency>
 ```
+
 A estas dependencias, debemos sumarles las nombradas anteriormente para que nuestro servicio
 solicite su configuración al servidor config de forma ordenada y, además, que se registre en nuestro
 service discovery.
@@ -655,39 +673,44 @@ realicen a través de su URI.
 Para nuestro caso, se han implementado dos configuraciones correspondientes a los perfiles Spring
 declarados, en nuestro caso, local y develop.
 Para el caso del perfil local:
+
 - **bootstrap-local.yml →**
+
 ```yml
 spring:
-application:
-name: gateway
-cloud:
-config:
-enabled: false
-eureka:
-client:
-enabled: false
+    application:
+        name: gateway
+    cloud:
+        config:
+            name: gateway
+            retry:
+                max-attempts: 10
+                initial-interval: 5000
+            fail-fast: true
 ```
+
 -----
 - **application-local.yml →**
+
 ```yml
 spring:
-cloud:
-gateway:
-routes:
-- id: task-calendar-service _#Order service route declaration_
-uri: "http://localhost:8095"
-predicates:
-- Path=/calendar/** _#Path to access the service_
-filters:
-- StripPrefix=1
-- id: task-control-service _#Task-Control service route
-declaration_
-uri: "http://localhost:8098"
-predicates:
-- Path=/task-control/** _#Path to access the service_
-filters:
-- StripPrefix=1
+    cloud:
+        gateway:
+            routes:
+                - id: task-calendar-service _#Order service route declaration_
+                uri: "http://localhost:8095"
+                predicates:
+                    - Path=/calendar/** _#Path to access the service_
+                filters:
+                    - StripPrefix=1
+                - id: task-control-service _#Task-Control service route declaration_
+                uri: "http://localhost:8098"
+                predicates:
+                    - Path=/task-control/** _#Path to access the service_
+                filters:
+                    - StripPrefix=1
 ```
+
 En este caso, la configuración inicial, o “bootstrap”, nos indica que no se desea que el servicio
 busque su configuración en el servidor y que, además, no se registre en el servidor Eureka. Esto se
 debe a que, en un entorno local, quizás no es deseable levantar todos los servicios, y solo es
@@ -695,64 +718,67 @@ necesario ejecutar los servicios individualmente para probar su funcionamiento.
 Junto a esta configuración inicial, se encuentra la configuración principal de la aplicación, en la que,
 en este caso, se declaran las rutas que nuestro servicio ha de redirigir junto con los predicados a los
 que el usuario tendrá acceso.
+
 ---
 ### Spring Cloud Config Server
 Spring, ofrece una implementación del llamado Config Server muy útil y sencilla. En nuestro caso, se ha creado un proyecto con la herramienta antes mencionada “spring-initializr”, con las dependencias correspondientes a Spring Cloud, que es la librería padre que nos ofrece Spring Cloud Config Server:
+
 ```xml
 <properties>
-<java.version>1.8</java.version>
-<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+    <java.version>1.8</java.version>
+    <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 </properties>
 <dependencies>
-<dependency>
-<groupId>org.springframework.cloud</groupId>
-<artifactId>spring-cloud-config-server</artifactId>
-</dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-config-server</artifactId>
+    </dependency>
 </dependencies>
 <dependencyManagement>
-<dependencies>
-<dependency>
-<groupId>org.springframework.cloud</groupId>
-<artifactId>spring-cloud-dependencies</artifactId>
-<version>${spring-cloud.version}</version>
-<type>pom</type>
-<scope>import</scope>
-</dependency>
-</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
 </dependencyManagement>
 ```
+
 Una vez hecho esto, tendremos un proyecto sencillo con una clase main que se ejecutará el contexto de spring. A esta clase, habrá que añadirle obligatoriamente la siguiente anotación:
 - **@EnableConfigServer**
 Además, para este servicio es necesario que implementemos una configuración concreta en el archivo “application.yml”, que debe ser la siguiente:
+
 ```yml
 server:
-port: 8888
+    port: 8888
 spring:
-application:
-name: server-config
-cloud:
-config:
-server:
-git:
-uri: https://gitlab.com/task-control-app-config/config-
-repo.git
-force-pull: true
-clone-on-start: true
-default-label: master
-repos:
-develop:
-uri: https://gitlab.com/task-control-app-
-config/config-repo.git
-force-pull: true
-clone-on-start: true
-default-label: develop
-local:
-uri: https://gitlab.com/task-control-app-
-config/config-repo.git
-force-pull: true
-clone-on-start: true
-default-label: local
+    application:
+        name: server-config
+    cloud:
+        config:
+            server:
+                git:
+                    uri: https://gitlab.com/task-control-app-config/config-repo.git
+                    force-pull: true
+                    clone-on-start: true
+                    default-label: master
+
+                    repos:
+                        develop:
+                            uri: https://gitlab.com/task-control-app-config/config-repo.git
+                            force-pull: true
+                            clone-on-start: true
+                            default-label: develop
+                        local:
+                            uri: https://gitlab.com/task-control-app-config/config-repo.git
+                            force-pull: true
+                            clone-on-start: true
+                            default-label: local
 ```
+
 Donde podremos definir distintos repositorios asociados a los perfiles de la aplicación spring. Por ejemplo, en nuestro caso, se han definido dos repositorios, que corresponden a dos perfiles definidos: local y develop.
 En el caso del repositorio local, la configuración se establece para un entorno de pruebas local en el que se pretende desplegar todos los servicios de forma local. Por otro lado, en el perfil develop, tenemos un repositorio en el que se encontrará la configuración para el despliegue en un entorno más avanzado posiblemente en remoto.
 Para que cada servicio pueda encontrar su archivo de configuración, estos archivos deben de tener como nombre, el nombre del servicio y extensión “.yml” o “.properties”.
@@ -760,32 +786,36 @@ En nuestro caso, se ha creado un repositorio GIT donde se contienen todos estos 
 <img src="https://i.imgur.com/jvTVj3Q.png">
 Para que el resto de los servicios puedan encontrar su configuración apuntando a este servicio, también han de tener una configuración previa a su ejecución, en la que se definirán ciertos aspectos como el puerto o la dirección donde se encuentra el servicio, que no se encuentra registrado en el Service Discovery ya que es un servicio extra y totalmente independiente, y el nombre con el que buscará su configuración en el repositorio.
 Por ejemplo, en el caso del servicio Gateway, tendremos una configuración en el archivo “bootstrap.yml” de la siguiente forma:
+
 ```yml
 spring:
-application:
-name: gateway
-cloud:
-config:
-name: gateway
-retry:
-max-attempts: 10
-initial-interval: 5000
-fail-fast: true
+    application:
+        name: gateway
+    cloud:
+        config:
+            name: gateway
+            retry:
+                max-attempts: 10
+                initial-interval: 5000
+            fail-fast: true
 ```
+
 Con esta configuración, estamos definiendo el nombre del servicio, junto con una configuración mínima para la política de reintentos en caso de no encontrar el servicio en la dirección determinada
 al inicio de la aplicación. Por defecto el puerto en el que el servicio buscará el servidor de configuración es el “8888”.
 Además, será necesario que el servicio que desee obtener su configuración del servidor tenga varias dependencias necesarias, como son:
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-config</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.retry</groupId>
+    <artifactId>spring-retry</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
 ```
-<dependency>
-<groupId>org.springframework.cloud</groupId>
-<artifactId>spring-cloud-starter-config</artifactId>
-</dependency>
-<dependency>
-<groupId>org.springframework.retry</groupId>
-<artifactId>spring-retry</artifactId>
-</dependency>
-<dependency>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-aop</artifactId>
-</dependency>
-```
+
