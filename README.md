@@ -796,7 +796,6 @@ Además, será necesario que el servicio que desee obtener su configuración del
 
 ### Docker - Creación y ejecución de imágenes
 
-
 <img src="https://i.imgur.com/NDMw6Cl.png">
 
 Para la creación de las imágenes Docker de los servicios que se han desarrollado, se ha investigado la herramienta desarrollada para maven llamada fabric8 plugin. Esta herramienta se encarga de la generación automática de la imagen Docker configurada a través de los archivos POM de cada servicio.
@@ -945,15 +944,18 @@ services:
 
 Para la ejecución de la aplicación a través de este método, será necesario navegar, a través de la consola de comandos, hasta la carpeta o directorio donde se encuentre dicho archivo y, una vez allí, deberemos ejecutar el comando docker-compose up.
 
-
 ---
 
-# Agredecimientos a MTRIBOR por su excelentisima investigacion. :)
+## Agredecimientos a MTRIBOR por su excelentisima investigacion. :)
 
 ## Repositorio GitHub
+
 ### https://github.com/MTribor/DAM_PFG_Microservicios
+
 ## Bibliografía
+
 ### Microservicios
+
 Tutorial sobre Microservicios con ejemplo → https://www.guru99.com/microservices-tutorial.html
 Ejemplo de aplicación de una tienda hecha con arquitectura en microservicios y distintas tecnologías para
 cada microservicio - Instana Robot Shop → https://github.com/instana/robot-shop/ || Guía para esta
@@ -967,34 +969,54 @@ Artículo sobre la arquitectura de Microservicios - → https://microservices.io
 Guía sencilla para crear microservicios - DZone→ https://dzone.com/articles/quick-guide-to-microservices-with-spring-boot-20-e https://dzone.com/articles/quick-guide-to-microservices-with-spring-boot-20-e
 ¿Por qué usar arquitectura de Microservicios? Utilizando un API Gateway- Microsoft →
 https://docs.microsoft.com/es-es/dotnet/standard/microservices-architecture/architect-microservice-container-applications/direct-client-to-microservice-communication-versus-the-api-gateway-pattern
+
 ---
+
 ### Spring Cloud
+
 #### Gateway
+
 Mini-guía de Spring Cloud Gateway - Bi Geek → https://blog.bi-geek.com/arquitecturas-microservicios-spring-cloud-gateway/
 ¿Por qué usar arquitectura de Microservicios? Utilizando un API Gateway- Microsoft →
 https://docs.microsoft.com/es-es/dotnet/standard/microservices-architecture/architect-microservice-container-applications/direct-client-to-microservice-communication-versus-the-api-gateway-pattern
+
 #### Service Discovery
+
 Documentación Spring Service Discovery Netflix - web oficial → https://cloud.spring.io/spring-cloud-netflix/multi/multi__service_discovery_eureka_clients.html
+
 #### Config Server
+
 Spring cloud config client retry → https://cloud.spring.io/spring-cloud-config/1.4.x/multi/multi__spring_cloud_config_client.html
 Spring cloud retry guide → https://www.alessiofiore.com/blog/programming/j2ee/spring/1654/how-to-retry-on-spring-config-server-connection-failure/
+
 ---
+
 ### Spring Boot
+
 Variables de entorno Spring - StackOverflow → https://stackoverflow.com/questions/47580247/optional-environment-variables-in-spring-app
 Construir una API REST con Spring y Java → https://www.baeldung.com/building-a-restful-web-service-with-spring-and-java-based-configuration
 Tutoriales RESTFul con Spring → https://www.baeldung.com/rest-with-spring-series
-----
+
+---
+
 ### Spring Data
+
 #### MongoDB
+
 Implementación de un repositorio personalizado → https://stackoverflow.com/questions/50185775/can-we-use-both-mongorepository-and-mongotemplate-in-same-application ||
 https://blog.marcnuri.com/spring-data-mongodb-implementacion-de-un-repositorio-a-medida/ ||
 https://stackoverflow.com/questions/17008947/whats-the-difference-between-spring-datas-mongotemplate-and-mongorepository
+
 #### PostgreSQL
+
 Spring data y PostgreSQL → https://dzone.com/articles/spring-boot-and-postgresql
 Persistencia con Spring Data y PostgreSQL → http://codedpoetry.com/persistence-with-spring-data-
 postgresql/
+
 ---
+
 ### Docker
+
 Documentación Fabric8 (maven plugin): https://maven.fabric8.io/ - https://dmp.fabric8.io/#simple-
 dockerfile-build - https://fabric8.io/guide/mavenDockerBuild.html - https://github.com/fabric8io/docker-maven-plugin/blob/master/doc/intro.md
 Crear un DockerFile → https://docs.docker.com/get-started/part2/
