@@ -617,7 +617,6 @@ Para las relaciones Uno a Muchos unidireccionales, la estructura básica de anot
 @JoinColumn(name = "employee")
 private List<WorkExperienceVO> workExperiences;
 ```
-
 Donde “@OneToMany” señala qué tipo de relación es, el “cascadeType” hace referencia a la forma de comportarse la “cascada” de acciones de los datos. Es decir, si se borra un objeto de la lista de objetos referenciados también se borrará su persistencia y etc. En este caso, “ALL” hace referencia a que están todos los modos activados.
 El atributo “orphanRemoval” indica si se desea que cuando se borre un objeto padre persistido, también se borren todos sus hijos.
 
