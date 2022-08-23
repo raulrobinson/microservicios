@@ -602,7 +602,6 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     }
 }
 ```
-
 En el caso de necesitar ambas implementaciones, es necesario crear una interfaz que extienda de MongoRepository y al mismo tiempo realizar una implementación propia de algunos métodos utilizando el java-bean MongoTemplate, como se puede ver en el ejemplo anterior.
 ---
 
@@ -642,7 +641,6 @@ De otra forma, también puede utilizarse la configuración en formato “.yml”
 server:
     port: ${PORT:8761}
 ```
-
 Donde la notación con el dólar, indica el uso de una variable global ya definida. En este caso, con la notación **“DEFAULT:new”**, se está indicando que primeramente se buscará la variable definida por defecto “PORT” para la propiedad server. En caso de no existir, los dos puntos indicar un operador
 lógico “OR” que indica qué puerto ha de usarse en caso de no existir uno por defecto ya definido. Esto nos sirve para parametrizar la configuración de nuestra aplicación.
 ---
