@@ -710,7 +710,6 @@ spring:
                 filters:
                     - StripPrefix=1
 ```
-
 En este caso, la configuración inicial, o “bootstrap”, nos indica que no se desea que el servicio
 busque su configuración en el servidor y que, además, no se registre en el servidor Eureka. Esto se
 debe a que, en un entorno local, quizás no es deseable levantar todos los servicios, y solo es
@@ -778,7 +777,6 @@ spring:
                             clone-on-start: true
                             default-label: local
 ```
-
 Donde podremos definir distintos repositorios asociados a los perfiles de la aplicación spring. Por ejemplo, en nuestro caso, se han definido dos repositorios, que corresponden a dos perfiles definidos: local y develop.
 En el caso del repositorio local, la configuración se establece para un entorno de pruebas local en el que se pretende desplegar todos los servicios de forma local. Por otro lado, en el perfil develop, tenemos un repositorio en el que se encontrará la configuración para el despliegue en un entorno más avanzado posiblemente en remoto.
 Para que cada servicio pueda encontrar su archivo de configuración, estos archivos deben de tener como nombre, el nombre del servicio y extensión “.yml” o “.properties”.
