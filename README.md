@@ -234,7 +234,141 @@ De esta forma, a través del gestor Maven, nos encontramos con la posibilidad de
 
 ---
 
+## Spring Boot - API Rest
 
+
+Llamamos API al conjunto de funciones y procedimientos que realizan distintas funciones con el fin de ser utilizadas por otro software. Este concepto se encuentra incluido en el concepto software de librería.
+
+
+Las siglas API vienen del inglés Application Programming Interface, que en español sería Interfaz de Programación de Aplicaciones. Esto se debe a que una API nos permite implementar las funciones y procedimientos que engloba en nuestro proyecto sin la necesidad de programarlas de nuevo. En términos de programación, es una capa de abstracción.
+
+
+Por otro lado, API REST se define como una librería que se basa totalmente en el estándar de
+comunicación HTTP. Dicho de otra forma, una API REST es un servicio que nos aporta funciones
+heredadas a través de un servicio web que no es nuestro, dentro de una aplicación propia, de
+manera segura.
+
+
+REST, REpresentational State Transfer, es un tipo de arquitectura de desarrollo web que se apoya totalmente en el estándar HTTP. Por ello, al ser un estándar de red, requiere de ciertas restricciones que permitan la correcta comunicación entre usuarios. Estas restricciones son:
+
+
+- Conexión cliente-servidor libre ; El cliente no necesita saber los detalles de la implementación del server, y este tampoco debe preocuparse por cómo se usan los datos que envía.
+
+
+- Cada petición enviada al servidor es independiente.
+
+
+- Compatibilidad con un sistema de almacenamiento en caché.
+
+
+- Cada recurso del servicio REST debe tener una única dirección , manteniendo una interfaz genérica.
+
+
+- Permite utilizar diferentes capas para la implementación del servidor.
+
+
+En nuestro caso, los servicios desarrollados siguen este patrón, ya que a día de hoy, REST y JSON, son la combinación más utilizada para el desarrollo de APIs, y la que un mayor apoyo de parte de la comunidad poseen.
+
+<img src="https://pngimage.net/wp-content/uploads/2018/06/introduccion-png-3.png">
+
+
+Con esto, además, Spring Framework posee toda una serie de librerías, módulos y funcionalidades a disposición de los desarrolladores para crear nuevas APIs REST. 
+
+
+La anotación @RestController , que indica que la clase Java que la contenga será la encargada de manejar las peticiones HTTP que nuestra aplicación recibirá, y que, además, nuestra aplicación ofrecerá respuestas acordes a las restricciones REST. En nuestro caso, como se ha indicado anteriormente, se oferecerán respuestas JSON.
+
+
+Además, Spring nos ofrece una serie de anotaciones para indicar al controlador REST qué métodos Java manejaran qué peticiones HTTP. Estas peticiones HTTP, pueden ser desde GET, POST, PUT PATCH, OPTIONS, DELETE, etc. Por lo tanto, Spring nos ofrece las siguientes anotaciones para cada operación: @GetMapping, @PostMapping, @PutMapping, @DeleteMapping , etc.
+
+
+Es recomendable, que los métodos de la clase “Controller” devuelvan objetos del tipo ResponseEntity<T> , donde “T” hace referencia al tipo de objeto que será transformado a JSON a través del traductor interno de Spring, llamado JackSon. Estos objetos, además de incluir el objeto Java a traducir como respuesta, nos permiten personalizar las cabeceras HTTP para dar unas respuestas más complejas y completas.
+
+Como ya hemos dicho, REST nos permite implementar los métodos HTTP y es fácil observar, que existen similitudes entre estos y las operaciones de una interfaz CRUD. Esto se debe a que realmente, una petición GET estará asociada a un query SELECT, una petición POST estará asociada a un query INSERT, una petición PUT a un UPDATE y así sucesivamente. Esto no tiene por qué ser
+siempre así, ya que por ejemplo, podría darse el caso de que una API consulte información de los recursos o procese ciertos datos para dar una respuesta sencilla. Esto dependerá de las necesidades del proyecto, pero en general funciona de la manera antes mencionada.
+
+Para nuestro desarrollo, en el servicio “Task Control”, podemos ver cómo queda definido una interfaz API y su implementación “Controller”:
+```
+@RequestMapping(EndPointUris. _CONTROLS_ )
+public interface TaskControlApi {
+@PostMapping
+ResponseEntity<ControlDTO> create(@Valid @RequestBody final
+ControlDTO controlDTO);
+@GetMapping
+ResponseEntity<List<ControlDTO>> getAll(final ControlFilterCriteriaDTO search);
+@GetMapping(EndPointUris.CONTROL)
+ResponseEntity<ControlDTO> getById(@PathVariable(value = "id")
+final int controlId);
+@DeleteMapping(EndPointUris.CONTROL)
+ResponseEntity<Void> delete(@PathVariable(value = "id") final int controlId);
+@PutMapping(EndPointUris.CONTROL)
+ResponseEntity<ControlDTO> update(@PathVariable(value = "id") final int controlId, @Valid @RequestBody final ControlDTO controlDTO);
+ }
+```
+
+En la Interfaz TaskControlAPI, definimos los métodos que manejará nuestro servicio junto con las anotaciones pertinentes, con la intención de que se puedan abordar varias implementaciones si fuera necesario.
+
+```
+@RestController
+public class TaskControlController implements TaskControlApi {
+@Autowired
+private TaskControlService taskControlService;
+@Override
+public ResponseEntity<ControlDTO> create(@Valid ControlDTO
+controlDTO) {
+return ResponseEntity.ok(taskControlService.create(controlDTO));
+}
+@Override
+public ResponseEntity<List<ControlDTO>>
+getAll(ControlFilterCriteriaDTO search) {
+return ResponseEntity.ok(taskControlService.getAll(search));
+}
+public ResponseEntity<ControlDTO> getById(@PathVariable(value =
+"id") final int controlId) {
+return ResponseEntity.ok(taskControlService.getById(controlId));
+}
+@Override
+public ResponseEntity<Void> delete(int controlId) {
+return ResponseEntity.noContent().build();
+}
+@Override
+public ResponseEntity<ControlDTO> update(int controlId, @Valid
+ControlDTO controlDTO) {
+return ResponseEntity.ok(taskControlService.update(controlId, controlDTO));
+}
+}
+```
+
+Para la documentación de estas APIs, es recomendable utilizar librerías ya existentes que permiten acceder a un índice con los métodos permitidos por la API, sus respuestas, requerimientos, accesibilidad, etc.
+A día de hoy, una de las mayores librerías o herramientas que da este soporte es Swagger. Con Swagger es posible documentar una API de forma sencilla sin la necesidad de mucha configuración o escritura.
+Para utilizar Swagger, tan solo es necesario incluir la dependencia principal a esta librería Maven en el POM principal del proyecto: 
+
+```
+<dependency> 
+<groupId>io.springfox</groupId> 
+<artifactId>springfox-swagger2</artifactId> 
+<version>2.9.2</version> 
+</dependency>
+```
+
+Además, será necesario activar esta utilidad en la clase ejecutable principal de nuestra aplicación, en este caso, tendríamos algo como: 
+
+```java
+@EnableSwagger2
+```
+
+Con esta dependencia nuestro proyecto contará con unos “endpoints” a través de los cuales cualquier persona que acceda a la dirección referente a Swagger, la cual es ***/v2/api-docs**, obtendrá toda la información en formato JSON sobre los métodos de la API en cuestión.
+Por otro lado, tenemos una interfaz gráfica ofrecida por Swagger para documentar nuestra aplicación de forma más sencilla y dinámica, que nos ofrece toda esta información en una pantalla HTML a través de la dirección ***/swagger-ui.html**:
+<img src="https://i.imgur.com/BaASx07.png">
+Para el uso de esta herramienta, será necesario incluir la dependencia correspondiente en el POM: 
+
+```
+<dependency> 
+<groupId>io.springfox</groupId> 
+<artifactId>springfox-swagger-ui</artifactId> 
+<version>2.9.2</version> 
+</dependency>
+```
+----
 
 
 
