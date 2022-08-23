@@ -287,21 +287,25 @@ Como ya hemos dicho, REST nos permite implementar los métodos HTTP y es fácil 
 siempre así, ya que por ejemplo, podría darse el caso de que una API consulte información de los recursos o procese ciertos datos para dar una respuesta sencilla. Esto dependerá de las necesidades del proyecto, pero en general funciona de la manera antes mencionada.
 
 Para nuestro desarrollo, en el servicio “Task Control”, podemos ver cómo queda definido una interfaz API y su implementación “Controller”:
-```
+
+```java
 @RequestMapping(EndPointUris. _CONTROLS_ )
 public interface TaskControlApi {
-@PostMapping
-ResponseEntity<ControlDTO> create(@Valid @RequestBody final
-ControlDTO controlDTO);
-@GetMapping
-ResponseEntity<List<ControlDTO>> getAll(final ControlFilterCriteriaDTO search);
-@GetMapping(EndPointUris.CONTROL)
-ResponseEntity<ControlDTO> getById(@PathVariable(value = "id")
-final int controlId);
-@DeleteMapping(EndPointUris.CONTROL)
-ResponseEntity<Void> delete(@PathVariable(value = "id") final int controlId);
-@PutMapping(EndPointUris.CONTROL)
-ResponseEntity<ControlDTO> update(@PathVariable(value = "id") final int controlId, @Valid @RequestBody final ControlDTO controlDTO);
+    @PostMapping
+    ResponseEntity<ControlDTO> create(@Valid @RequestBody final ControlDTO controlDTO);
+
+    @GetMapping
+    ResponseEntity<List<ControlDTO>> getAll(final ControlFilterCriteriaDTO search);
+
+    @GetMapping(EndPointUris.CONTROL)
+    ResponseEntity<ControlDTO> getById(@PathVariable(value = "id")
+    final int controlId);
+
+    @DeleteMapping(EndPointUris.CONTROL)
+    ResponseEntity<Void> delete(@PathVariable(value = "id") final int controlId);
+
+    @PutMapping(EndPointUris.CONTROL)
+    ResponseEntity<ControlDTO> update(@PathVariable(value = "id") final int controlId, @Valid @RequestBody final ControlDTO controlDTO);
  }
 ```
 
