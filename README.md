@@ -74,6 +74,118 @@ Por otro lado, podemos ver como no es necesario que todos los servicios mantenga
 ---
 ## Desarrollando un sistema de Microservicios
 
+Se busca mantener un intercambio de información sobre las tareas diarias de las materias, entre los alumnos y el profesor, de una forma ordenada y eficiente.
+
+
+Es decir, nuestro problema reside en encontrar una forma de realizar un seguimiento centralizado para todas las tareas de una materia. De tal forma que el profesor pueda saber qué alumnos han realizado la tarea, y en caso de no haberla realizado, poder encontrar una breve explicación de por
+qué.
+
+
+Por otro lado, el profesor desea conocer qué opinan los alumnos de la dificultad, o el volumen de trabajo, de las tareas que se han pedido. De tal forma que cada alumno pueda valorarla y, además, escribir un breve comentario.
+
+
+Finalmente, es importante que los alumnos puedan tener acceso a las tareas que se han pedido de forma ordenada cronológicamente. Es decir, de alguna forma, que dichas tareas estén reflejadas en un calendario para que sea fácil para los alumnos, y a la vez para el profesor, organizar dichas tareas en el tiempo.
+
+---
+### Modelo
+
+
+Una vez abordado el problema, se puede construir el modelo para la aplicación. Para ello han de definirse los conceptos con los que se van a trabajar:
+
+
+- Tareas : Son las distintas actividades que se realizan en una materia. Pueden ser de distintos tipos, entre los que se contemplan: Deberes, Exámenes, Talleres, Entregas de trabajos, etc.
+
+
+- Seguimientos : Representan los datos que intercambian los alumnos para cada tarea con el profesor.Corresponden a la valoración del trabajo realizado, la valoración de la dificultad de la tarea y los respectivos comentarios a ambas valoraciones.
+
+
+- Profesores : Son los encargados de administrar las tareas, es decir, son los encargados de crear, modificar y eliminar las tareas. Además, podrán acceder a los comentarios de los alumnos.
+
+
+- Alumnos : Pueden acceder a la información de cada tarea. Además, deberán interactuar con cada tarea para realizar el seguimiento de éstas. Para ello deberán valorar cada tarea y escribir un comentario para cada valoración antes de la fecha de fin de la tarea. Aunque podrán escribir comentarios tras la fecha de fin que, por defecto, valorarán su trabajo realizado como “Fuera de plazo”.
+
+<img src="https://i.imgur.com/RrsCJl1.png">
+
+
+---
+### Servicios
+
+#### Calendario (Tareas)
+
+
+- Descripción : Este servicio soporta las peticiones referidas a las tareas de cada materia en una fecha y horario concreto sobre un calendario y un profesor concreto.
+
+
+- Tecnología : Api Rest, Spring-Boot, Spring-MVC, Lombock, Java 8.
+
+
+- Funcionalidad : Manejo de tareas: Creación, modificación, borrado y lectura de las tareas generadas.
+
+
+- Modelo : Una colección “Tareas” que maneja documentos de tipo “Tarea” que contienen referencias a las materias, alumnos y profesores que la componen.
+
+
+- Base de datos : MongoDB.
+
+#### Seguimiento (Valoraciones y comentarios)
+
+
+- Descripción : Servicio encargado de manejar las peticiones sobre la realización de las tareas por parte de los alumnos y la valoración de la carga de trabajo y la dificultad de las tareas asignadas.
+
+
+- Tecnología : Api Rest, Spring-Boot, Spring-MVC, Lombock, Java 8.
+
+
+
+- Funcionalidad : Manejo de controles o seguimientos para las tareas existentes. Creación de un control para una tarea, borrado, modificación y lectura.
+
+
+- Modelo : Una tabla “Seguimientos” que contiene elementos “Seguimiento” los cuales, cada uno, tienen una referencia a cada tarea y cada alumno correspondiente.
+
+
+- Base de datos : PostgreSQL.
+
+#### API Gateway
+
+
+- Descripción : Servicio encargado de centralizar las llamadas a los demás servicios a través de una URI que hace de entrada de peticiones.
+
+
+- Tecnología : Api Rest, Spring-Boot, Spring-Cloud Gateway sobre Java 8.
+
+
+- Funcionalidad : Se encarga de centralizar las llamadas a la aplicación en una URI principal que redirige las llamadas a los servicios configurados internamente.
+
+#### Service-Discovery
+
+
+- Descripción : Servicio encargado de registrar las direcciones a los microservicios que componen la aplicación y redireccionar las peticiones hacia estos.
+
+
+- Tecnología : Spring-Boot, Spring-Cloud y Netflix Eureka sobre Java 8
+
+
+- Funcionalidad : Encargado de redirigir las llamadas realizadas a cada servicio a través de una URI genérica a la dirección del servidor en el que se encuentra dicho servicio.
+
+#### Server Config
+
+
+- Descripción : Este servicio está a la espera de recibir peticiones por parte del resto de servicios, para que se les proporcione la configuración necesaria para su ejecución en el entorno definido. Cuando este servicio recibe estas peticiones, recoge los archivos de configuración para cada servicio (de extensión “.yml” o “.properties”) de un repositorio definido para luego proporcionárselo al servicio que haya realizado la petición.
+
+
+- Tecnología : Spring-Boot y Spring-Cloud: Spring Cloud Config Server sobre Java8
+
+
+- Funcionalidad : Busca sobre un repositorio los archivos de configuración de cada servicio que los solicite.
+
+
+
+En nuestro caso, la arquitectura de nuestra aplicación será la siguiente:
+
+<img src="https://i.imgur.com/kvNxe7K.png">
+
+---
+
 
 
 
