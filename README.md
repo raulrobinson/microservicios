@@ -604,7 +604,6 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 ```
 En el caso de necesitar ambas implementaciones, es necesario crear una interfaz que extienda de MongoRepository y al mismo tiempo realizar una implementación propia de algunos métodos utilizando el java-bean MongoTemplate, como se puede ver en el ejemplo anterior.
 ---
-
 ### Spring Data - PostgreSQL
 Se crea una clase Interfaz que extienda a “JPARepository<R,T>” donde “R” es el tipo Java de la ID y “T” el tipo de los objetos que se van a guardar. La implementación de JPA hace uso de algunos ORMs como Hibernate.
 - **@Entity**: Señala que esta clase es un objeto que se puede persistir en la estructura de datos.
